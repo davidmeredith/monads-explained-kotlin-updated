@@ -8,7 +8,7 @@ import kotlin.test.fail
 class BakingTest {
 
     @Test
-    fun `demo happy path with interleaved result checking`(){
+    fun `demo interleaved result checking`(){
         val ingredients = listOf("sugar", "water", "flower")
         val pie = "baked cherry pie"
 
