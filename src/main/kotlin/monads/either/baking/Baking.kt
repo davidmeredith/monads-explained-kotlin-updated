@@ -25,7 +25,7 @@ fun cook(ingredients: List<String> , temperature: Int): Either<BakingServiceErro
     if(temperature < 180) {
         return Either.Left(BakingServiceError.TemperatureTooLow)
     }
-    return Either.Right(OkVal("Cooked ok"))
+    return Either.Right(OkVal("Cooked $ingredients ok"))
 }
 
 fun pack(pie: String, isFragile : Boolean): Either<BakingServiceError, OkVal> {
@@ -33,10 +33,11 @@ fun pack(pie: String, isFragile : Boolean): Either<BakingServiceError, OkVal> {
         // we can't pack fragile cakes yet
        return Either.Left(BakingServiceError.PackingFailed)
     }
-    return Either.Right(OkVal("Packed ok"))
+    return Either.Right(OkVal("Packed $pie ok"))
 }
 
 fun deliver(pie: String): Boolean {
+    println("Packing $pie")
     return true
 }
 

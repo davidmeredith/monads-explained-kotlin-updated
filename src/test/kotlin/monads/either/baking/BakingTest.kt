@@ -21,13 +21,13 @@ class BakingTest {
         val cookResult = bakePrepped.flatMap {  cook(ingredients, temperature = 180) }
         when(cookResult) {
             is Either.Left<BakingServiceError> -> fail("unexpected left error")
-            is Either.Right<OkVal> -> assert(cookResult.value.message == "Cooked ok")
+            is Either.Right<OkVal> -> assert(cookResult.value.message == "Cooked $ingredients ok")
         }
 
         val packResult = cookResult.flatMap {  pack(pie, isFragile = false) }
         when(packResult) {
             is Either.Left<BakingServiceError> -> fail("unexpected left error")
-            is Either.Right<OkVal> -> assert(packResult.value.message == "Packed ok")
+            is Either.Right<OkVal> -> assert(packResult.value.message == "Packed $pie ok")
         }
 
         val deliverResult : Either<BakingServiceError, Boolean> = packResult.map { deliver(pie) }
@@ -148,7 +148,7 @@ class BakingTest {
             .map { deliver(pie) }
             .flatMap { rate(score = 1) }
 
-        // Show how to exhaustively extract data from the returned
+        // Show how to exhaustively extract the returned
         // BakingServiceError.PoorRating data object
         when (result) {
             is Either.Right<OkVal> -> fail("unexpected Right")
