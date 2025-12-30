@@ -10,29 +10,38 @@ import kotlin.contracts.contract
 
 // Very basic implementation, just for the sake of the explanation
 sealed class Either<out A, out B> {
-    data class Left<A>(val value: A) : Either<A, Nothing>()
-    data class Right<B>(val value: B) : Either<Nothing, B>()
+  data class Left<A>(val value: A) : Either<A, Nothing>()
+  data class Right<B>(val value: B) : Either<Nothing, B>()
 
-    fun <C> map(f: (B) -> C): Either<A, C> = flatMap { Right(f(it)) }
+
+  // A and B are the wrapped types for Left and Right respectively
+  // f is the type of the function to be applied
+  // C is the return type of the function f
+  //
+  // Important: Notice that C is its own parameterised type to allow
+  // for type transformations of the success type from B to C.
+  // The Left A (typically the error type) remains unchanged.
+
+  fun <C> map(f: (B) -> C): Either<A, C> = flatMap { Right(f(it)) }
 
 //    fun <A, C> flatMap(f: (B) -> Either<A, C>): Either<A, C> = when (this) {
 //        is Right -> f(this.value)
 //        is Left -> this as Either<A, C>
 //    }
 
-    fun isRight(): Boolean {
-        return when (this) {
-            is Right -> true
-            is Left -> false
-        }
+  fun isRight(): Boolean {
+    return when (this) {
+      is Right -> true
+      is Left -> false
     }
+  }
 
-    fun isLeft(): Boolean {
-        return when (this) {
-            is Right -> false
-            is Left -> true
-        }
+  fun isLeft(): Boolean {
+    return when (this) {
+      is Right -> false
+      is Left -> true
     }
+  }
 }
 
 
@@ -44,9 +53,9 @@ sealed class Either<out A, out B> {
  * @param f The function to bind across [Right].
  */
 inline fun <A, B, C> Either<A, B>.flatMap(f: (right: B) -> Either<A, C>): Either<A, C> {
-    contract { callsInPlace(f, InvocationKind.AT_MOST_ONCE) }
-    return when (this) {
-        is Right -> f(this.value)
-        is Left -> this
-    }
+  contract { callsInPlace(f, InvocationKind.AT_MOST_ONCE) }
+  return when (this) {
+    is Right -> f(this.value)
+    is Left -> this
+  }
 }

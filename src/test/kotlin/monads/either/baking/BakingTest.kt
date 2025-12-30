@@ -80,10 +80,15 @@ class BakingTest {
     val ingredients = listOf("sugar", "water", "flower", "cherries")
 
     val result: Either<BakingServiceError, OkVal> = validateIngredients(ingredients)
-      .flatMap { cook(ingredients, temperature = 180) }
+      // note type of PARAMETERSIED type 'it' below is OkVal and we are using 
+      // trailing lambda syntax to print the message before proceeding (the parenthesis 
+      // aren't needed but are shown for demonstration - we also show 
+      // the implicit 'it', although its redundant in this example) 
+      .flatMap() { it -> println(it.message); cook(ingredients, temperature = 180) }
       .flatMap { pack(pie, isFragile = false) }
       .map { deliver(pie) }
-      .flatMap { rate(score = 5) }
+      // note type of PARAMETERISED type 'it' below is Boolean
+      .flatMap { it -> rate(score = 5) }
 
     when (result) {
       is Either.Left<BakingServiceError> -> fail("unexpected left error")
