@@ -1,5 +1,5 @@
 package org.example
 
 fun main() {
-    println("Hello World!")
+    println("Hi! Please refer to README.md to get started")
 }
